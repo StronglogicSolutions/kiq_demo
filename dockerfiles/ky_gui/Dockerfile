@@ -6,5 +6,5 @@ WORKDIR target
 RUN ls -la .
 RUN qmake ky_gui.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug && make
 RUN mkdir /target/config
-COPY config.json /target/config/config.json
+COPY config.json /ky_gui/target/config/config.json
 WORKDIR /
