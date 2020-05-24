@@ -1,0 +1,43 @@
+version: '3'
+services:
+    kserver:
+        build: ./dockerfiles/kserver
+        hostname: "kserver"
+        ports:
+            - "9009:9009"
+        environment:
+            KSERVER_ENV: LOCAL_DEVELOPMENT
+        stdin_open: true
+        networks:
+            - infranet
+        volumes:
+            - ./db:/db
+        command: >
+                bash  -c "\
+                    sudo -u postgres /usr/bin/initdb /var/lib/postgres/data/ && \
+                    sudo cp postgresql.conf /var/lib/postgres/data/postgresql.conf && \
+                    sudo -u postgres /usr/bin/pg_ctl -D /var/lib/postgres/data/ start && \
+                    db/./db_init.sh && \
+                    psql kiq < db/kiq_platform.sql -U kiq_admin -w -h 0.0.0.0 && \
+                    cd target && \
+                    ./kserver\
+                "
+    # ky_gui:
+    #     build: ./dockerfiles/ky_gui
+    #     hostname: "ky_gui"
+    #     environment:
+    #         KY_GUI_ENV: LOCAL_DEVELOPMENT
+    #     links:
+    #         - "postgres"
+    #     depends_on:
+    #         - "postgres"
+    #     stdin_open: true
+    #     networks:
+    #         - infranet
+    # #     # volumes:
+    # #     #     - ./ky_gui:/ky_gui
+    #     command: >
+    #             bash  -c "echo \"hi from ky_gui\""
+
+networks:
+    infranet:
