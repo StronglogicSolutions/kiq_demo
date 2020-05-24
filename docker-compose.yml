@@ -22,22 +22,22 @@ services:
                     cd target && \
                     ./kserver\
                 "
-    # ky_gui:
-    #     build: ./dockerfiles/ky_gui
-    #     hostname: "ky_gui"
-    #     environment:
-    #         KY_GUI_ENV: LOCAL_DEVELOPMENT
-    #     links:
-    #         - "postgres"
-    #     depends_on:
-    #         - "postgres"
-    #     stdin_open: true
-    #     networks:
-    #         - infranet
-    # #     # volumes:
-    # #     #     - ./ky_gui:/ky_gui
-    #     command: >
-    #             bash  -c "echo \"hi from ky_gui\""
+    ky_gui:
+        build: ./dockerfiles/ky_gui
+        hostname: "ky_gui"
+        environment:
+            KY_GUI_ENV: LOCAL_DEVELOPMENT
+        links:
+            - "postgres"
+        depends_on:
+            - "postgres"
+        stdin_open: true
+        networks:
+            - infranet
+    #     # volumes:
+    #     #     - ./ky_gui:/ky_gui
+        command: >
+                bash  -c "echo \"hi from ky_gui\""
 
 networks:
     infranet:
