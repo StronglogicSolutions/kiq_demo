@@ -28,16 +28,14 @@ services:
         environment:
             KY_GUI_ENV: LOCAL_DEVELOPMENT
         links:
-            - "postgres"
+            - "kserver"
         depends_on:
-            - "postgres"
+            - "kserver"
         stdin_open: true
         networks:
             - infranet
-    #     # volumes:
-    #     #     - ./ky_gui:/ky_gui
         command: >
-                bash  -c "echo \"hi from ky_gui\""
+                bash  -c "echo \"KY_GUI container has been built and prepraed. To run, use this command: `docker run --device /dev/dri/ -it --network host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY kiq_platform_ky_gui_1 ./ky_gui`\""
 
 networks:
     infranet:
