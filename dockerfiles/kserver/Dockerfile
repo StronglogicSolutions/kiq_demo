@@ -2,7 +2,7 @@ FROM logicp/kserver:1.0.0
 
 ENV TZ="America/Toronto"
 # Get target application
-RUN git clone -b kiqDeploy --single-branch https://github.com/StronglogicSolutions/kserver target
+RUN git clone https://github.com/StronglogicSolutions/kserver target
 # Build
 RUN cd target && git submodule sync && git submodule update --init && BUILD_ENV=CIRCLECI cmake . && make
 # Copy config
