@@ -5,6 +5,11 @@
 
 ### Mac users
 
+#### Enable file sharing in Docker
+1. Go to docker preferences
+2. Share the path where you've cloned this repo
+3. Restart docker
+
 [XQuartz info taken from here](https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949)
 #### Set up XQuartz
 1. Launch XQuartz. Under the XQuartz menu, select Preferences
