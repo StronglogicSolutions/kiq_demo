@@ -5,7 +5,7 @@ ID=$1
 
 ## DB Select helper
 function kiq_select() {
-  echo $(psql kiq -Ukiqadmin --pset="pager=off" --pset="footer=off" -t -c "SELECT $1 from schedule where id = $2;" | sed 's/[ \t]*$//')
+  echo $(psql kiq -Ukiq_admin -h 0.0.0.0 --pset="pager=off" --pset="footer=off" -t -c "SELECT $1 from schedule where id = $2;" | sed 's/[ \t]*$//')
 }
 
 ## Set environment variables for execution
@@ -14,10 +14,8 @@ function set_env_vars() {
   ENVFILE=$(kiq_select envfile $ID)
   FLAGS=$(kiq_select flags $ID)
   MASK=$(kiq_select mask $ID)
-  FILENAMES=$(psql kiq -Ukiq_admin --pset="pager=off" --pset="footer=off" -t -c "SELECT name FROM file WHERE sid = $ID;" | sed 's/[ \t]*$//')
-#  FILENAMES=$(psql kiq -Ukiqadmin --pset="pager=off" --pset="footer=off" -t -c "SELECT '--filename=', name FROM file WHERE sid = $ID;" | sed -e 's/[ \t]*$//' -e 's/ | //')
-
-  APP_PATH=$(psql kiq -Ukiq_admin --pset="pager=off" --pset="footer=off" -t -c "SELECT path FROM apps WHERE mask = $MASK;" | sed 's/[ \t]*$//')
+  FILENAMES=$(psql kiq -Ukiq_admin -h 0.0.0.0 --pset="pager=off" --pset="footer=off" -t -c "SELECT name FROM file WHERE sid = $ID;" | sed 's/[ \t]*$//')
+  APP_PATH=$(psql kiq -Ukiq_admin -h 0.0.0.0 --pset="pager=off" --pset="footer=off" -t -c "SELECT path FROM apps WHERE mask = $MASK;" | sed 's/[ \t]*$//')
   MEDIA_FILE=$(echo $FILENAME | sed 's/[ \t]*$//')
 
   # source environment variable
