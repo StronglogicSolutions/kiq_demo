@@ -5,6 +5,12 @@
 
 ### Mac users
 
+[XQuartz info taken from here](https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949)
+#### Set up XQuartz
+1. Launch XQuartz. Under the XQuartz menu, select Preferences
+2. Go to the security tab and ensure "Allow connections from network clients" is checked.
+3. Restart XQuartz.
+
 Do the following to run the KY_GUI client:
 ```
 IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
