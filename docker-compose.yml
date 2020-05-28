@@ -14,8 +14,9 @@ services:
             - ./db:/db
         command: >
                 bash  -c "\
+                    rm -rf /var/lib/postgres/data/* && \
                     sudo -u postgres /usr/bin/initdb /var/lib/postgres/data/ && \
-                    sudo cp postgresql.conf /var/lib/postgres/data/postgresql.conf && \
+                    cp postgresql.conf /var/lib/postgres/data/postgresql.conf && \
                     sudo -u postgres /usr/bin/pg_ctl -D /var/lib/postgres/data/ start && \
                     db/./db_init.sh && \
                     psql kiq < db/kiq_platform.sql -U kiq_admin -w -h 0.0.0.0 && \
@@ -35,7 +36,7 @@ services:
         networks:
             - infranet
         command: >
-                bash  -c "echo \"KY_GUI container has been built and prepared. To run, use this command: docker run --device /dev/dri/ -it --network host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY kiq_platform_ky_gui_1 ./ky_gui\""
-
+                bash  -c "echo \"KY_GUI container has been built and prepared. To run on Linux, use this command: docker run --device /dev/dri/ -it --network host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix:0 kiq_platform_ky_gui ./target/ky_gui 127.0.0.1 9009 test\nTo run on Mac, follow the instructions posted here: https://github.com/StronglogicSolutions/kiq_demo/blob/master/README.md
+                \""
 networks:
     infranet:
