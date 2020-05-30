@@ -21,7 +21,7 @@ services:
                     db/./db_init.sh && \
                     psql kiq < db/kiq_platform.sql -U kiq_admin -w -h 0.0.0.0 && \
                     cd target && \
-                    ./kserver\
+                    ./kserver --port=8686\
                 "
     ky_gui:
         build: ./dockerfiles/ky_gui
