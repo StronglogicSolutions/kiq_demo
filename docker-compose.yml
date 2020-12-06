@@ -36,7 +36,7 @@ services:
         networks:
             - infranet
         command: >
-                bash  -c "echo \"KY_GUI container has been built and prepared. To run on Linux, use this command: docker run --device /dev/dri/ -it --network host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix:0 kiq_platform_ky_gui ./target/ky_gui 127.0.0.1 8686 test\nTo run on Mac, follow the instructions posted here: https://github.com/StronglogicSolutions/kiq_demo/blob/master/README.md
+                bash  -c "echo \"KY_GUI container has been built and prepared. To run on Linux, use this command: docker run --device /dev/dri/ -it --network host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix:0 kiq_platform_ky_gui ./kygui/ky_gui 127.0.0.1 8686 test\nTo run on Mac, follow the instructions posted here: https://github.com/StronglogicSolutions/kiq_demo/blob/master/README.md
                 \""
 networks:
     infranet:
