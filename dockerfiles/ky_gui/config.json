@@ -1,5 +1,7 @@
 {
-  "defaultApp": "CWD\ Test",
+  "defaultApp": "Task Runner",
+  "schedulerMode": "false",
+  "fetchSchedule": "true",
   "default": {"users": ["user1", "user2"]},
   "task_test": {"users": ["user1", "user2"]},
   "concurrent_calls": {"users": ["user1", "user2"]},
