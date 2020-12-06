@@ -21,6 +21,37 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: get_recurring_seconds(integer); Type: FUNCTION; Schema: public; Owner: kiqadmin
+--
+
+CREATE FUNCTION public.get_recurring_seconds(n integer) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+CASE n
+WHEN 0 THEN
+RETURN 0;
+WHEN 1 THEN
+RETURN 3600;
+WHEN 2 THEN
+RETURN 86400;
+WHEN 3 THEN
+RETURN 2419200;
+WHEN 4 THEN
+RETURN 31536000;
+END CASE;
+END;
+$$;
+
+
+
+ALTER FUNCTION public.get_recurring_seconds(n integer) OWNER TO kiq_admin;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
 -- Name: apps; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -91,6 +122,40 @@ ALTER TABLE public.file_id_seq OWNER TO kiq_admin;
 
 ALTER SEQUENCE public.file_id_seq OWNED BY public.file.id;
 
+--
+-- Name: recurring; Type: TABLE; Schema: public; Owner: kiqadmin
+--
+
+CREATE TABLE public.recurring (
+    id integer NOT NULL,
+    sid integer NOT NULL,
+    "time" integer
+);
+
+
+ALTER TABLE public.recurring OWNER TO kiq_admin;
+
+--
+-- Name: recurring_id_seq; Type: SEQUENCE; Schema: public; Owner: kiqadmin
+--
+
+CREATE SEQUENCE public.recurring_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recurring_id_seq OWNER TO kiq_admin;
+
+--
+-- Name: recurring_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kiqadmin
+--
+
+ALTER SEQUENCE public.recurring_id_seq OWNED BY public.recurring.id;
+
 
 --
 -- Name: schedule; Type: TABLE; Schema: public; Owner: postgres
@@ -102,7 +167,9 @@ CREATE TABLE public.schedule (
     flags text,
     envfile text,
     "time" integer,
-    completed integer DEFAULT 0
+    completed integer DEFAULT 0,
+    recurring integer DEFAULT 0,
+    notify boolean DEFAULT false
 );
 
 
@@ -142,6 +209,14 @@ ALTER TABLE ONLY public.apps ALTER COLUMN id SET DEFAULT nextval('public.apps_id
 --
 
 ALTER TABLE ONLY public.file ALTER COLUMN id SET DEFAULT nextval('public.file_id_seq'::regclass);
+
+
+--
+-- Name: recurring id; Type: DEFAULT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.recurring ALTER COLUMN id SET DEFAULT nextval('public.recurring_id_seq'::regclass);
+
 
 
 --
