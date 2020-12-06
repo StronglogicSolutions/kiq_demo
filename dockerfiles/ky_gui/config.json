@@ -1,10 +1,10 @@
 {
-  "defaultApp": "Task Runner",
+  "defaultApp": "CWD\ Test",
   "default": {"users": ["user1", "user2"]},
   "task_test": {"users": ["user1", "user2"]},
   "concurrent_calls": {"users": ["user1", "user2"]},
   "Task Runner": {"users": ["user1", "user2"]},
   "Concurrent Calls": {"users": ["user1", "user2"]},
   "instagram": {"users": ["user1", "user2"]},
-  "fileDirectory": "/target/assets"
+  "fileDirectory": "/data"
 }

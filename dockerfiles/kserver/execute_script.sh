@@ -25,14 +25,27 @@ function set_env_vars() {
 ## Build execute command and execute!
 function execute() {
   # Build execution string
-  PARAMS="--description=\"'$DESCRIPTION'\" --header=\"'$HEADER'\" --promote_share=\"'$PROMOTE_SHARE'\" --requested_by=\"'$REQUESTED_BY'\" --requested_by_phrase=\"'$REQUESTED_BY_PHRASE'\" --hashtags=\"'$HASHTAGS'\" --link_bio=\"'$LINK_BIO'\" --user=\"'$USER'\" --media=\"'$FILE_TYPE'\""
+  PARAMS=""
+  [ ! -z "$R_ARGS" ] && PARAMS=$(echo $"$PARAMS")" '$R_ARGS' "
+  [ ! -z "$DESCRIPTION" ] && PARAMS=$(echo $"$PARAMS")" --description=\"'$DESCRIPTION'\" "
+  [ ! -z "$HEADER" ] && PARAMS=$(echo $"$PARAMS")" --header=\"'$HEADER'\" "
+  [ ! -z "$PROMOTE_SHARE" ] && PARAMS=$(echo $"$PARAMS")" --promote_share=\"'$PROMOTE_SHARE'\" "
+  [ ! -z "$REQUESTED_BY" ] && PARAMS=$(echo $"$PARAMS")" --requested_by=\"'$REQUESTED_BY'\" "
+  [ ! -z "$REQUESTED_BY_PHRASE" ] && PARAMS=$(echo $"$PARAMS")" --requested_by_phrase=\"'$REQUESTED_BY_PHRASE'\" "
+  [ ! -z "$REQUESTED_BY" ] && PARAMS=$(echo $"$PARAMS")" --requested_by=\"'$REQUESTED_BY'\" "
+  [ ! -z "$HASHTAGS" ] && PARAMS=$(echo $"$PARAMS")" --hashtags=\"'$HASHTAGS'\" "
+  [ ! -z "$LINK_BIO" ] && PARAMS=$(echo $"$PARAMS")" --link_bio=\"'$LINK_BIO'\" "
+  [ ! -z "$USER" ] && PARAMS=$(echo $"$PARAMS")" --user=\"'$USER'\" "
+  [ ! -z "$FILE_TYPE" ] && PARAMS=$(echo $"$PARAMS")" --media=\"'$FILE_TYPE'\" "
+
   # Append filename params
   for name in $FILENAMES
     do
       PARAMS=$(echo $"$PARAMS")" "--filename="'$name'"
-  done
+    done
 # Execute
   EXECUTE_STRING=$APP_PATH" "$PARAMS
+  IFS=
   eval $EXECUTE_STRING
 }
 

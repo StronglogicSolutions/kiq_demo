@@ -2,8 +2,9 @@ FROM logicp/kserver:1.0.0
 
 ENV TZ="America/Toronto"
 # Get target application
-RUN git clone https://github.com/StronglogicSolutions/kserver target
+RUN git clone -b scheduleCrud --single-branch https://github.com/StronglogicSolutions/kserver target
 # Build
+RUN pacman -S --noconfirm libsodium zeromq
 RUN cd target && git submodule sync && git submodule update --init && BUILD_ENV=CIRCLECI cmake . && make
 # Copy config
 COPY config.ini /target/config/config.ini
