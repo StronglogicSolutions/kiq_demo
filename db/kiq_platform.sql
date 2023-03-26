@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.6 (Ubuntu 12.6-0ubuntu0.20.10.1)
--- Dumped by pg_dump version 12.6 (Ubuntu 12.6-0ubuntu0.20.10.1)
+-- Dumped from database version 13.6 (Ubuntu 13.6-0ubuntu0.21.10.1)
+-- Dumped by pg_dump version 13.6 (Ubuntu 13.6-0ubuntu0.21.10.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -22,22 +22,24 @@ SET row_security = off;
 
 CREATE FUNCTION public.get_recurring_seconds(n integer) RETURNS integer
     LANGUAGE plpgsql
-    AS $$
-BEGIN
-CASE n
-WHEN 0 THEN
-RETURN 0;
-WHEN 1 THEN
-RETURN 3600;
-WHEN 2 THEN
-RETURN 86400;
-WHEN 3 THEN
-RETURN 2419200;
-WHEN 4 THEN
-RETURN 31536000;
-END CASE;
-END;
-$$;
+    AS $$                                                    
+ BEGIN                                                            
+ CASE n                                                           
+ WHEN 0 THEN                                                      
+ RETURN 0;                                                        
+ WHEN 1 THEN                                                      
+ RETURN 3600;                                                     
+ WHEN 2 THEN                                                      
+ RETURN 86400;                                                    
+ WHEN 3 THEN                                                      
+ RETURN 604800;                                                  
+ WHEN 4 THEN
+ RETURN 2419200;
+ WHEN 5 THEN                                                      
+ RETURN 31536000;                                                 
+ END CASE;                                                        
+ END;                                                             
+ $$;
 
 
 ALTER FUNCTION public.get_recurring_seconds(n integer) OWNER TO kiqadmin;
@@ -45,6 +47,41 @@ ALTER FUNCTION public.get_recurring_seconds(n integer) OWNER TO kiqadmin;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: affiliation; Type: TABLE; Schema: public; Owner: kiqadmin
+--
+
+CREATE TABLE public.affiliation (
+    id integer NOT NULL,
+    pid integer NOT NULL,
+    oid integer NOT NULL
+);
+
+
+ALTER TABLE public.affiliation OWNER TO kiqadmin;
+
+--
+-- Name: affiliation_id_seq; Type: SEQUENCE; Schema: public; Owner: kiqadmin
+--
+
+CREATE SEQUENCE public.affiliation_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.affiliation_id_seq OWNER TO kiqadmin;
+
+--
+-- Name: affiliation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kiqadmin
+--
+
+ALTER SEQUENCE public.affiliation_id_seq OWNED BY public.affiliation.id;
+
 
 --
 -- Name: apps; Type: TABLE; Schema: public; Owner: kiqadmin
@@ -91,7 +128,8 @@ ALTER SEQUENCE public.apps_id_seq OWNED BY public.apps.id;
 CREATE TABLE public.file (
     id integer NOT NULL,
     name text,
-    sid integer
+    sid integer,
+    type text
 );
 
 
@@ -117,6 +155,113 @@ ALTER TABLE public.file_id_seq OWNER TO kiqadmin;
 --
 
 ALTER SEQUENCE public.file_id_seq OWNED BY public.file.id;
+
+
+--
+-- Name: ipc; Type: TABLE; Schema: public; Owner: kiqadmin
+--
+
+CREATE TABLE public.ipc (
+    id integer NOT NULL,
+    "time" integer NOT NULL,
+    pid text,
+    command text,
+    data text,
+    status integer DEFAULT 0,
+    p_uuid text
+);
+
+
+ALTER TABLE public.ipc OWNER TO kiqadmin;
+
+--
+-- Name: ipc_id_seq; Type: SEQUENCE; Schema: public; Owner: kiqadmin
+--
+
+CREATE SEQUENCE public.ipc_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ipc_id_seq OWNER TO kiqadmin;
+
+--
+-- Name: ipc_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kiqadmin
+--
+
+ALTER SEQUENCE public.ipc_id_seq OWNED BY public.ipc.id;
+
+
+--
+-- Name: organization; Type: TABLE; Schema: public; Owner: kiqadmin
+--
+
+CREATE TABLE public.organization (
+    id integer NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE public.organization OWNER TO kiqadmin;
+
+--
+-- Name: organization_id_seq; Type: SEQUENCE; Schema: public; Owner: kiqadmin
+--
+
+CREATE SEQUENCE public.organization_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.organization_id_seq OWNER TO kiqadmin;
+
+--
+-- Name: organization_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kiqadmin
+--
+
+ALTER SEQUENCE public.organization_id_seq OWNED BY public.organization.id;
+
+
+--
+-- Name: person; Type: TABLE; Schema: public; Owner: kiqadmin
+--
+
+CREATE TABLE public.person (
+    id integer NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE public.person OWNER TO kiqadmin;
+
+--
+-- Name: person_id_seq; Type: SEQUENCE; Schema: public; Owner: kiqadmin
+--
+
+CREATE SEQUENCE public.person_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.person_id_seq OWNER TO kiqadmin;
+
+--
+-- Name: person_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kiqadmin
+--
+
+ALTER SEQUENCE public.person_id_seq OWNED BY public.person.id;
 
 
 --
@@ -272,7 +417,8 @@ CREATE TABLE public.platform_user (
     id integer NOT NULL,
     pid integer NOT NULL,
     name text NOT NULL,
-    type text
+    type text,
+    pers_id integer
 );
 
 
@@ -413,6 +559,151 @@ ALTER SEQUENCE public.schedule_id_seq OWNED BY public.schedule.id;
 
 
 --
+-- Name: term; Type: TABLE; Schema: public; Owner: kiqadmin
+--
+
+CREATE TABLE public.term (
+    id integer NOT NULL,
+    name text NOT NULL,
+    type text
+);
+
+
+ALTER TABLE public.term OWNER TO kiqadmin;
+
+--
+-- Name: term_hit; Type: TABLE; Schema: public; Owner: kiqadmin
+--
+
+CREATE TABLE public.term_hit (
+    id integer NOT NULL,
+    tid integer NOT NULL,
+    uid integer NOT NULL,
+    "time" timestamp without time zone DEFAULT now() NOT NULL,
+    sid integer
+);
+
+
+ALTER TABLE public.term_hit OWNER TO kiqadmin;
+
+--
+-- Name: term_hit_id_seq; Type: SEQUENCE; Schema: public; Owner: kiqadmin
+--
+
+CREATE SEQUENCE public.term_hit_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.term_hit_id_seq OWNER TO kiqadmin;
+
+--
+-- Name: term_hit_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kiqadmin
+--
+
+ALTER SEQUENCE public.term_hit_id_seq OWNED BY public.term_hit.id;
+
+
+--
+-- Name: term_id_seq; Type: SEQUENCE; Schema: public; Owner: kiqadmin
+--
+
+CREATE SEQUENCE public.term_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.term_id_seq OWNER TO kiqadmin;
+
+--
+-- Name: term_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kiqadmin
+--
+
+ALTER SEQUENCE public.term_id_seq OWNED BY public.term.id;
+
+
+--
+-- Name: trigger_config; Type: TABLE; Schema: public; Owner: kiqadmin
+--
+
+CREATE TABLE public.trigger_config (
+    id integer NOT NULL,
+    tid integer NOT NULL,
+    token_name text,
+    section text,
+    name text
+);
+
+
+ALTER TABLE public.trigger_config OWNER TO kiqadmin;
+
+--
+-- Name: trigger_config_id_seq; Type: SEQUENCE; Schema: public; Owner: kiqadmin
+--
+
+CREATE SEQUENCE public.trigger_config_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.trigger_config_id_seq OWNER TO kiqadmin;
+
+--
+-- Name: trigger_config_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kiqadmin
+--
+
+ALTER SEQUENCE public.trigger_config_id_seq OWNED BY public.trigger_config.id;
+
+
+--
+-- Name: trigger_map; Type: TABLE; Schema: public; Owner: kiqadmin
+--
+
+CREATE TABLE public.trigger_map (
+    id integer NOT NULL,
+    tid integer NOT NULL,
+    old text,
+    new text
+);
+
+
+ALTER TABLE public.trigger_map OWNER TO kiqadmin;
+
+--
+-- Name: trigger_map_id_seq; Type: SEQUENCE; Schema: public; Owner: kiqadmin
+--
+
+CREATE SEQUENCE public.trigger_map_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.trigger_map_id_seq OWNER TO kiqadmin;
+
+--
+-- Name: trigger_map_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kiqadmin
+--
+
+ALTER SEQUENCE public.trigger_map_id_seq OWNED BY public.trigger_map.id;
+
+
+--
 -- Name: triggers; Type: TABLE; Schema: public; Owner: kiqadmin
 --
 
@@ -420,8 +711,8 @@ CREATE TABLE public.triggers (
     id integer NOT NULL,
     mask integer,
     trigger_mask integer,
-    field_name text,
-    field_value text
+    token_name text,
+    token_value text
 );
 
 
@@ -450,6 +741,13 @@ ALTER SEQUENCE public.triggers_id_seq OWNED BY public.triggers.id;
 
 
 --
+-- Name: affiliation id; Type: DEFAULT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.affiliation ALTER COLUMN id SET DEFAULT nextval('public.affiliation_id_seq'::regclass);
+
+
+--
 -- Name: apps id; Type: DEFAULT; Schema: public; Owner: kiqadmin
 --
 
@@ -461,6 +759,27 @@ ALTER TABLE ONLY public.apps ALTER COLUMN id SET DEFAULT nextval('public.apps_id
 --
 
 ALTER TABLE ONLY public.file ALTER COLUMN id SET DEFAULT nextval('public.file_id_seq'::regclass);
+
+
+--
+-- Name: ipc id; Type: DEFAULT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.ipc ALTER COLUMN id SET DEFAULT nextval('public.ipc_id_seq'::regclass);
+
+
+--
+-- Name: organization id; Type: DEFAULT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.organization ALTER COLUMN id SET DEFAULT nextval('public.organization_id_seq'::regclass);
+
+
+--
+-- Name: person id; Type: DEFAULT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.person ALTER COLUMN id SET DEFAULT nextval('public.person_id_seq'::regclass);
 
 
 --
@@ -520,10 +839,46 @@ ALTER TABLE ONLY public.schedule ALTER COLUMN id SET DEFAULT nextval('public.sch
 
 
 --
+-- Name: term id; Type: DEFAULT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.term ALTER COLUMN id SET DEFAULT nextval('public.term_id_seq'::regclass);
+
+
+--
+-- Name: term_hit id; Type: DEFAULT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.term_hit ALTER COLUMN id SET DEFAULT nextval('public.term_hit_id_seq'::regclass);
+
+
+--
+-- Name: trigger_config id; Type: DEFAULT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.trigger_config ALTER COLUMN id SET DEFAULT nextval('public.trigger_config_id_seq'::regclass);
+
+
+--
+-- Name: trigger_map id; Type: DEFAULT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.trigger_map ALTER COLUMN id SET DEFAULT nextval('public.trigger_map_id_seq'::regclass);
+
+
+--
 -- Name: triggers id; Type: DEFAULT; Schema: public; Owner: kiqadmin
 --
 
 ALTER TABLE ONLY public.triggers ALTER COLUMN id SET DEFAULT nextval('public.triggers_id_seq'::regclass);
+
+
+--
+-- Name: affiliation affiliation_pkey; Type: CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.affiliation
+    ADD CONSTRAINT affiliation_pkey PRIMARY KEY (id);
 
 
 --
@@ -540,6 +895,30 @@ ALTER TABLE ONLY public.apps
 
 ALTER TABLE ONLY public.file
     ADD CONSTRAINT file_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ipc ipc_pkey; Type: CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.ipc
+    ADD CONSTRAINT ipc_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization organization_pkey; Type: CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.organization
+    ADD CONSTRAINT organization_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: person person_pkey; Type: CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.person
+    ADD CONSTRAINT person_pkey PRIMARY KEY (id);
 
 
 --
@@ -607,6 +986,38 @@ ALTER TABLE ONLY public.schedule
 
 
 --
+-- Name: term_hit term_hit_pkey; Type: CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.term_hit
+    ADD CONSTRAINT term_hit_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: term term_pkey; Type: CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.term
+    ADD CONSTRAINT term_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: trigger_config trigger_config_pkey; Type: CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.trigger_config
+    ADD CONSTRAINT trigger_config_pkey PRIMARY KEY (id, tid);
+
+
+--
+-- Name: trigger_map trigger_map_pkey; Type: CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.trigger_map
+    ADD CONSTRAINT trigger_map_pkey PRIMARY KEY (id, tid);
+
+
+--
 -- Name: triggers triggers_pkey; Type: CONSTRAINT; Schema: public; Owner: kiqadmin
 --
 
@@ -628,6 +1039,14 @@ ALTER TABLE ONLY public.platform_user
 
 ALTER TABLE ONLY public.apps
     ADD CONSTRAINT unique_mask UNIQUE (mask);
+
+
+--
+-- Name: platform_post unique_user_post; Type: CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.platform_post
+    ADD CONSTRAINT unique_user_post UNIQUE (pid, unique_id, uid);
 
 
 --
@@ -679,6 +1098,46 @@ ALTER TABLE ONLY public.platform_repost
 
 
 --
+-- Name: trigger_map fk_trigger; Type: FK CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.trigger_map
+    ADD CONSTRAINT fk_trigger FOREIGN KEY (tid) REFERENCES public.triggers(id);
+
+
+--
+-- Name: trigger_config fk_trigger; Type: FK CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.trigger_config
+    ADD CONSTRAINT fk_trigger FOREIGN KEY (tid) REFERENCES public.triggers(id);
+
+
+--
+-- Name: affiliation org_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.affiliation
+    ADD CONSTRAINT org_fkey FOREIGN KEY (oid) REFERENCES public.organization(id) NOT VALID;
+
+
+--
+-- Name: platform_user person_fk; Type: FK CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.platform_user
+    ADD CONSTRAINT person_fk FOREIGN KEY (pers_id) REFERENCES public.person(id);
+
+
+--
+-- Name: affiliation person_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.affiliation
+    ADD CONSTRAINT person_fkey FOREIGN KEY (pid) REFERENCES public.person(id) NOT VALID;
+
+
+--
 -- Name: platform_affiliate_user platform_affiliate_user_a_uid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kiqadmin
 --
 
@@ -711,6 +1170,22 @@ ALTER TABLE ONLY public.recurring
 
 
 --
+-- Name: term_hit schedule_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.term_hit
+    ADD CONSTRAINT schedule_fkey FOREIGN KEY (sid) REFERENCES public.schedule(id);
+
+
+--
+-- Name: term_hit term_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.term_hit
+    ADD CONSTRAINT term_fkey FOREIGN KEY (tid) REFERENCES public.term(id) NOT VALID;
+
+
+--
 -- Name: triggers triggers_mask_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kiqadmin
 --
 
@@ -724,6 +1199,14 @@ ALTER TABLE ONLY public.triggers
 
 ALTER TABLE ONLY public.triggers
     ADD CONSTRAINT triggers_trigger_mask_fkey FOREIGN KEY (trigger_mask) REFERENCES public.apps(mask);
+
+
+--
+-- Name: term_hit user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kiqadmin
+--
+
+ALTER TABLE ONLY public.term_hit
+    ADD CONSTRAINT user_fkey FOREIGN KEY (uid) REFERENCES public.platform_user(id);
 
 
 --
